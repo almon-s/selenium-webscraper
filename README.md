@@ -1,5 +1,5 @@
 # web-scraper-project
 
-A simple web scraping project idea.
+A web scraping python project. Scraping Glassdoor with Selenium.
 
-The goal is to get the recent company names and relevant skills required from a job listing website. Store it in text files for now. 
+The goal is to scrape company names, job title and job description/relevant skills from glassdoor. Store it as a dataframe.
