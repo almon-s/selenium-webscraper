@@ -1,21 +1,64 @@
-from bs4 import BeautifulSoup
-import requests
 from selenium import webdriver 
 from selenium.webdriver.common.by import By
+import time 
+import pandas as pd
+from sklearn.datasets import load_iris
 
-html_text = requests.get('https://www.glassdoor.com/Job/hong-kong-python-developer-jobs-SRCH_IL.0,9_IC2308631_KO10,26.htm?sortBy=date_desc').text
-soup = BeautifulSoup(html_text, 'lxml')
+def python_jobs(num_jobs, check):
+    '''Gets jobs for 'python developer' as a dataframe from Glassdoor.'''
 
-url = 'https://www.glassdoor.com/Job/hong-kong-python-developer-jobs-SRCH_IL.0,9_IC2308631_KO10,26.htm?sortBy=date_desc'
-driver = webdriver.Chrome('Users/almonsubba/Downloads/chromedriver')
-driver.get(url)
+    url = 'https://www.glassdoor.com/Job/hong-kong-python-developer-jobs-SRCH_IL.0,9_IC2308631_KO10,26.htm?sortBy=date_desc'
+    driver = webdriver.Chrome('Users/almonsubba/Downloads/chromedriver')
+    driver.get(url)
+    data = load_iris()
+    jobs = []
 
-# Find company name(s).
-job = soup.find('li', class_ = 'react-job-listing css-wp148e eigr9kq4')
-company_name = job.find('a', class_ = 'css-l2wjgv e1n63ojh0 jobLink').text
+    while len(jobs) < num_jobs:
 
-# Find job requirements. (Python)
-for skills in driver.find_elements(By.XPATH, '//div[@class="jobDescriptionContent desc"]'):
-    print(skills.text)
+        time.sleep(4)
 
-# print(f'Company Name: {company_name},\nRequired Skills: {skills}')
+        try:
+            driver.find_element(By.CLASS_NAME, 'selected').click()
+        except:
+            time.sleep(.1)
+
+        try:
+            driver.find_element(By.CLASS_NAME, 'ModalStyle__xBtn___29PT9').click()
+        except:
+            time.sleep(.1)
+
+
+        #Clicking each job card button.
+        job_buttons = driver.find_elements(By.CLASS_NAME, 'jlGrid')
+        for job_button in job_buttons:
+            print("Loading...")
+            if len(jobs) >= num_jobs:
+                break
+
+            job_button.click()
+            time.sleep(1)
+            collected_successfully = False
+            
+            while not collected_successfully:
+                try:
+                    company_name = driver.find_element(By.XPATH, '//div[@data-test="employerName"]').text
+                    job_title = driver.find_element(By.XPATH, '//div[@data-test="jobTitle"]').text
+                    job_description = driver.find_element(By.XPATH, '//div[@class="jobDescriptionContent desc"]').text
+                    collected_successfully = True
+                except:
+                    time.sleep(3)
+
+            if check:
+                print("Job Title: {}".format(job_title))
+                print("Company Name: {}".format(company_name))
+                print("Job Description: {}".format(job_description))
+
+            jobs.append({"Job Title" : job_title,
+            "Company Name" : company_name,
+            "Job Description" : job_description})
+
+    return pd.DataFrame(jobs)
+
+
+df = python_jobs(5, False)
+print(df.to_string()) 
