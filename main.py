@@ -11,6 +11,7 @@ def python_jobs(num_jobs, check):
     url = 'https://www.glassdoor.com/Job/hong-kong-python-developer-jobs-SRCH_IL.0,9_IC2308631_KO10,26.htm?sortBy=date_desc'
     driver = webdriver.Chrome('Users/almonsubba/Downloads/chromedriver')
     driver.get(url)
+    
     jobs = []
 
     # If its true, will still be looking for jobs.
@@ -20,21 +21,20 @@ def python_jobs(num_jobs, check):
 
         # For the sign up prompt, get rid of it.
         try:
-            driver.find_element(By.CLASS_NAME, 'selected').click()
-        except ElementClickInterceptedException:
-            pass
+            driver.find_element(By.CLASS_NAME, '.selected').click()
+        except:
 
-        time.sleep(.1)
+            time.sleep(.1)
 
         # Clicking the 'X' button.
         try:
-            driver.find_element(By.CLASS_NAME, 'ModalStyle__xBtn___29PT9').click()
+            driver.find_element(By.CLASS_NAME, '.SVGInline_modal_closeIcon').click()
         except NoSuchElementException:
             pass
 
 
         # Clicking each job card button.
-        job_buttons = driver.find_elements(By.CLASS_NAME, 'jlGrid')
+        job_buttons = driver.find_element(By.CLASS_NAME, '.jl')
         for job_button in job_buttons:
             print("Loading...")
             
@@ -75,4 +75,4 @@ def python_jobs(num_jobs, check):
 data = load_iris()
 df = python_jobs(5, False)
 
-print(df.to_string()) 
+print(df.to_json())
