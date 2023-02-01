@@ -21,20 +21,21 @@ def python_jobs(num_jobs, check):
 
         # For the sign up prompt, get rid of it.
         try:
-            driver.find_element(By.CLASS_NAME, '.selected').click()
-        except:
+            driver.find_element(By.CLASS_NAME, 'selected').click()
+        except ElementClickInterceptedException:
+            pass
 
             time.sleep(.1)
 
         # Clicking the 'X' button.
         try:
-            driver.find_element(By.CLASS_NAME, '.SVGInline_modal_closeIcon').click()
+            driver.find_element(By.CLASS_NAME, 'SVGInline-svg modal_closeIcon-svg').click()
         except NoSuchElementException:
             pass
 
 
         # Clicking each job card button.
-        job_buttons = driver.find_element(By.CLASS_NAME, '.jl')
+        job_buttons = driver.find_element(By.CLASS_NAME, 'jl')
         for job_button in job_buttons:
             print("Loading...")
             
