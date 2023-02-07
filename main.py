@@ -20,20 +20,11 @@ def python_jobs(num_jobs, check):
 
         time.sleep(5)
 
-        # Close sign up prompt pop up.
-        try:
-            driver.find_element(By.CLASS_NAME, 'SVGInline-svg modal_closeIcon-svg').click()
-        except NoSuchElementException:
-            pass
-
-        time.sleep(1)
-
         # Expand description by clicking See More.
         try:
             driver.find_element(By.CSS_SELECTOR, 'css-t3xrds e856ufb4').click()
         except NoSuchElementException:
             pass
-
 
         # Clicking each job card button.
         job_buttons = driver.find_elements(By.XPATH, "//article[@id='MainCol']//ul/li[@data-adv-type='GENERAL']")
@@ -50,6 +41,14 @@ def python_jobs(num_jobs, check):
             except ElementClickInterceptedException:
                 pass
             
+            # Close sign up prompt pop up.
+            try:
+                driver.find_element(By.XPATH, "//span[@alt='Close' and @class='SVGInline modal_closeIcon']").click()
+            except NoSuchElementException:
+                pass
+
+            time.sleep(1)
+
             # Keeps searching unless.
             while not collected_successfully:
                 try:
@@ -77,5 +76,5 @@ def python_jobs(num_jobs, check):
 
     return pd.DataFrame(jobs)
 
-df = python_jobs(5, False)
+df = python_jobs(10, False)
 print(df.to_string())
