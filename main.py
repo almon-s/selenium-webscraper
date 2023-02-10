@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 import time 
 import pandas as pd
-from sklearn.datasets import load_iris
 
 
 def python_jobs(num_jobs, check):
@@ -77,4 +76,4 @@ def python_jobs(num_jobs, check):
     return pd.DataFrame(jobs)
 
 df = python_jobs(10, False)
-print(df.to_string())
+df.to_csv('python_jobs.csv', index=False)
